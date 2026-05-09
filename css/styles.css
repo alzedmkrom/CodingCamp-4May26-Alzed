@@ -1,0 +1,691 @@
+/* To-Do Life Dashboard — styles.css
+   All styling lives here (Requirement 6.2). */
+
+/* ============================================================
+   2.3 Base & Typography
+   ============================================================ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
+  font-size: 16px; /* base; 14px minimum enforced below */
+  min-height: 100vh;
+  background: linear-gradient(160deg, #1e40af 0%, #93c5fd 40%, #ffffff 100%);
+  background-attachment: fixed;
+  color: #222;
+  padding-top: 0; /* adjusted when storage-warning is visible */
+}
+
+/* Ensure no text falls below 14px */
+body,
+input,
+button,
+textarea,
+select {
+  font-size: max(14px, 1rem);
+}
+
+/* ============================================================
+   2.3 Storage Warning Banner
+   ============================================================ */
+
+#storage-warning {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  width: 100%;
+  padding: 0.6rem 1rem;
+  background-color: #b45309; /* amber-700 — contrasting, non-alarming */
+  color: #fff;
+  font-size: 14px;
+  text-align: center;
+  cursor: pointer;
+}
+
+#storage-warning[hidden] {
+  display: none;
+}
+
+/* ============================================================
+   2.1 Desktop Grid Layout
+   ============================================================ */
+
+.dashboard {
+  display: grid;
+  grid-template-areas:
+    "greeting greeting"
+    "timer    tasks"
+    "links    links";
+  grid-template-columns: 1fr 2fr;
+  gap: 1rem;
+  max-width: 1200px;
+  margin: 1.5rem auto;
+  padding: 0 1rem;
+}
+
+/* Grid area assignments */
+#greeting-widget { grid-area: greeting; }
+#focus-timer     { grid-area: timer; }
+#task-list       { grid-area: tasks; }
+#quick-links     { grid-area: links; }
+
+/* ============================================================
+   Widget card base
+   ============================================================ */
+
+#greeting-widget,
+#focus-timer,
+#task-list,
+#quick-links {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.25rem 1.5rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+/* ============================================================
+   2.3 Greeting Widget Typography
+   ============================================================ */
+
+/* Time display — minimum 24px */
+#greeting-time,
+.time-display {
+  font-size: clamp(32px, 4vw, 48px);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1.1;
+  color: #144cf5;
+}
+
+/* Greeting heading — minimum 20px */
+#greeting-text,
+.greeting-heading {
+  font-size: clamp(26px, 3vw, 36px);
+  font-weight: 500;
+  margin-top: 0.25rem;
+}
+
+/* Row that holds the greeting h1 and the pencil edit button */
+.greeting-name-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+#greeting-edit-btn {
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 0.2rem;
+  border-radius: 4px;
+  line-height: 1;
+  opacity: 0.6;
+  transition: opacity 0.15s, background 0.15s;
+  flex-shrink: 0;
+}
+
+#greeting-edit-btn:hover {
+  opacity: 1;
+  background: rgba(0, 0, 0, 0.06);
+}
+
+/* Name input panel — shown below the greeting row */
+#greeting-name-panel {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.6rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+#greeting-name-panel[hidden] {
+  display: none;
+}
+
+#greeting-name-input {
+  padding: 0.3rem 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  width: 180px;
+}
+
+#greeting-name-save {
+  padding: 0.3rem 0.75rem;
+  border: none;
+  border-radius: 4px;
+  background: #2563eb;
+  color: #fff;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+#greeting-name-cancel {
+  padding: 0.3rem 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: #fff;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+/* Dark mode */
+html.dark #greeting-edit-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+html.dark #greeting-name-input {
+  background: #0f172a;
+  border-color: #475569;
+  color: #e2e8f0;
+}
+
+html.dark #greeting-name-cancel {
+  background: #1e293b;
+  border-color: #475569;
+  color: #e2e8f0;
+}
+
+#greeting-date {
+  font-size: clamp(14px, 1.4vw, 18px);
+  color: #555;
+  margin-top: 0.15rem;
+}
+
+/* ============================================================
+   2.3 Focus Timer Typography
+   ============================================================ */
+
+/* Countdown display — minimum 48px */
+#timer-display,
+.countdown-display {
+  font-size: clamp(48px, 6vw, 72px);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+  text-align: center;
+  margin: 0.5rem 0;
+  color: #144cf5;
+}
+
+#focus-timer h2 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  text-align: center;
+}
+
+/* Duration settings panel */
+#timer-settings-panel {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  background: #f0f4ff;
+  border: 1px solid #c7d7fd;
+  border-radius: 6px;
+  padding: 0.6rem 0.75rem;
+  margin-bottom: 0.75rem;
+  font-size: 14px;
+}
+
+#timer-settings-panel label {
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+#timer-duration-input {
+  width: 70px;
+  padding: 0.3rem 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  text-align: center;
+}
+
+#timer-duration-set {
+  padding: 0.3rem 0.75rem;
+  border: none;
+  border-radius: 4px;
+  background: #2563eb;
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+#timer-duration-error {
+  width: 100%;
+  font-size: 13px;
+  color: #dc2626;
+}
+
+/* Dark mode overrides for duration panel */
+html.dark #timer-settings-panel {
+  background: #0f172a;
+  border-color: #334155;
+  color: #e2e8f0;
+}
+
+html.dark #timer-duration-input {
+  background: #1e293b;
+  border-color: #475569;
+  color: #e2e8f0;
+}
+
+.timer-controls {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  margin-top: 0.75rem;
+}
+
+.timer-controls button {
+  padding: 0.4rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.timer-controls button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+#timer-done-message {
+  text-align: center;
+  margin-top: 0.5rem;
+  font-weight: 600;
+  color: #16a34a;
+}
+
+/* ============================================================
+   Task List — header with sort controls
+   ============================================================ */
+
+.task-list-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.task-list-header h2 {
+  margin-bottom: 0;
+}
+
+.task-sort-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.sort-label {
+  font-size: 13px;
+  color: #666;
+  font-weight: 500;
+}
+
+.sort-btn {
+  padding: 0.25rem 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: #fff;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.sort-btn:hover {
+  background: #f0f4ff;
+  border-color: #93c5fd;
+}
+
+.sort-btn--active {
+  background: #2563eb;
+  border-color: #2563eb;
+  color: #fff;
+}
+
+.sort-btn--active:hover {
+  background: #1d4ed8;
+  border-color: #1d4ed8;
+}
+
+/* Dark mode overrides */
+html.dark .sort-label {
+  color: #94a3b8;
+}
+
+html.dark .sort-btn {
+  background: #1e293b;
+  border-color: #475569;
+  color: #e2e8f0;
+}
+
+html.dark .sort-btn:hover {
+  background: #334155;
+  border-color: #93c5fd;
+}
+
+html.dark .sort-btn--active {
+  background: #2563eb;
+  border-color: #2563eb;
+  color: #fff;
+}
+
+/* ============================================================
+   2.3 Task List
+   ============================================================ */
+
+#task-list h2,
+#quick-links h2 {
+  font-size: 18px;
+  font-weight: 600;
+}
+#task-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+#task-form label {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+#task-input {
+  flex: 1;
+  min-width: 0;
+  padding: 0.35rem 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+#task-form button[type="submit"] {
+  padding: 0.35rem 0.9rem;
+  border: none;
+  border-radius: 4px;
+  background: #2563eb;
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+#task-input-error {
+  width: 100%;
+  font-size: 13px;
+  color: #dc2626;
+}
+
+#task-container {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+#task-container li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.5rem;
+  border-radius: 4px;
+  background: #f9f9f9;
+  font-size: 14px;
+}
+
+/* 2.3 Completed task visual distinction */
+#task-container li.completed {
+  opacity: 0.5;
+}
+
+#task-container li.completed .task-description {
+  text-decoration: line-through;
+}
+
+/* ============================================================
+   Quick Links — header with sort controls
+   ============================================================ */
+
+.quick-links-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.quick-links-header h2 {
+  margin-bottom: 0;
+}
+
+/* ============================================================
+   Quick Links — form and container
+   ============================================================ */
+
+#link-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  flex: 1;
+  min-width: 120px;
+}
+
+.form-field label {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.form-field input {
+  padding: 0.35rem 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.form-field span[role="alert"] {
+  font-size: 13px;
+  color: #dc2626;
+}
+
+#link-form button[type="submit"] {
+  align-self: flex-end;
+  padding: 0.35rem 0.9rem;
+  border: none;
+  border-radius: 4px;
+  background: #2563eb;
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+#links-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+/* Each link is wrapped in a .quick-link-item div containing an <a> and a delete button */
+.quick-link-item {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+#links-container a,
+.quick-link-anchor {
+  padding: 0.35rem 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: #f0f4ff;
+  color: #1d4ed8;
+  font-size: 14px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.quick-link-item button {
+  padding: 0.2rem 0.4rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background: #fff;
+  font-size: 14px;
+  cursor: pointer;
+  line-height: 1;
+}
+
+/* ============================================================
+   Greeting Widget — centered content + dark mode toggle
+   ============================================================ */
+
+#greeting-widget {
+  position: relative;
+}
+
+#dark-mode-toggle {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 0.3rem 0.75rem;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  line-height: 1.4;
+  transition: background 0.2s;
+}
+
+#dark-mode-toggle:hover {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+.greeting-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 0.25rem 0 0.5rem;
+}
+
+/* ============================================================
+   Dark mode — applied via <html class="dark">
+   ============================================================ */
+
+html.dark body {
+  background: linear-gradient(160deg, #000814 0%, #001d3d 50%, #003566 100%);
+  color: #e2e8f0;
+}
+
+html.dark #greeting-widget,
+html.dark #focus-timer,
+html.dark #task-list,
+html.dark #quick-links {
+  background: #1e293b;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+}
+
+html.dark #greeting-date {
+  color: #94a3b8;
+}
+
+html.dark #greeting-time,
+html.dark #timer-display {
+  color: #89a5fa;
+}
+
+html.dark #dark-mode-toggle {
+  border-color: #475569;
+  color: #e2e8f0;
+}
+
+html.dark #dark-mode-toggle:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+html.dark #task-input,
+html.dark .form-field input {
+  background: #0f172a;
+  border-color: #475569;
+  color: #e2e8f0;
+}
+
+html.dark #task-input::placeholder,
+html.dark .form-field input::placeholder {
+  color: #64748b;
+}
+
+html.dark #task-container li {
+  background: #0f172a;
+  color: #e2e8f0;
+}
+
+html.dark .timer-controls button {
+  background: #0f172a;
+  border-color: #475569;
+  color: #e2e8f0;
+}
+
+html.dark .timer-controls button:disabled {
+  opacity: 0.3;
+}
+
+html.dark #links-container a,
+html.dark .quick-link-anchor {
+  background: #0f172a;
+  border-color: #475569;
+  color: #93c5fd;
+}
+
+html.dark .quick-link-item button {
+  background: #1e293b;
+  border-color: #475569;
+  color: #e2e8f0;
+}
+
+html.dark #storage-warning {
+  background-color: #92400e;
+}
+
+
+
+@media (max-width: 767px) {
+  .dashboard {
+    grid-template-areas:
+      "greeting"
+      "timer"
+      "tasks"
+      "links";
+    grid-template-columns: 1fr;
+    margin: 0.75rem auto;
+  }
+}

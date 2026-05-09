@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>To-Do Life Dashboard</title>
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <!-- Storage error banner (non-blocking, top of page) -->
+    <div id="storage-warning" role="alert" hidden></div>
+
+    <div class="dashboard">
+
+      <!-- Widget 1: Greeting -->
+      <header id="greeting-widget">
+        <button id="dark-mode-toggle" type="button" aria-label="Toggle dark mode">Dark Mode</button>
+        <div class="greeting-content">
+          <p id="greeting-time" aria-live="polite"></p>
+          <p id="greeting-date"></p>
+          <div class="greeting-name-row">
+            <h1 id="greeting-text"></h1>
+            <button id="greeting-edit-btn" type="button" aria-label="Edit your name">✏️</button>
+          </div>
+          <!-- Name input panel, hidden until edit button is clicked -->
+          <div id="greeting-name-panel" hidden>
+            <input
+              type="text"
+              id="greeting-name-input"
+              maxlength="30"
+              placeholder="Enter your name…"
+              autocomplete="off"
+              aria-label="Your name"
+            />
+            <button id="greeting-name-save" type="button">Save</button>
+            <button id="greeting-name-cancel" type="button">Cancel</button>
+          </div>
+        </div>
+      </header>
+
+      <!-- Widget 2: Focus Timer -->
+      <section id="focus-timer" aria-label="Focus Timer">
+        <h2>Focus Timer</h2>
+
+        <!-- Duration setting panel (always visible) -->
+        <div id="timer-settings-panel">
+          <label for="timer-duration-input">Duration (minutes)</label>
+          <input
+            type="number"
+            id="timer-duration-input"
+            min="1"
+            max="180"
+            value="25"
+            aria-label="Timer duration in minutes"
+          />
+          <button id="timer-duration-set" type="button">Set</button>
+          <span id="timer-duration-error" role="alert" hidden></span>
+        </div>
+
+        <p id="timer-display" aria-live="polite" aria-atomic="true">25:00</p>
+        <div class="timer-controls">
+          <button id="timer-start" type="button">Start</button>
+          <button id="timer-stop" type="button" disabled>Stop</button>
+          <button id="timer-reset" type="button" disabled>Reset</button>
+        </div>
+        <p id="timer-done-message" hidden>Session ended!</p>
+      </section>
+
+      <!-- Widget 3: Task List -->
+      <section id="task-list" aria-label="Task List">
+        <div class="task-list-header">
+          <h2>Tasks</h2>
+          <div class="task-sort-controls">
+            <span class="sort-label">Sort:</span>
+            <button type="button" id="sort-none-btn" class="sort-btn sort-btn--active" data-sort="none">Default</button>
+            <button type="button" id="sort-alpha-btn" class="sort-btn" data-sort="alpha">A–Z</button>
+            <button type="button" id="sort-status-btn" class="sort-btn" data-sort="status">Status</button>
+          </div>
+        </div>
+
+        <!-- Add-task form -->
+        <form id="task-form" novalidate>
+          <label for="task-input">New task</label>
+          <input
+            type="text"
+            id="task-input"
+            name="task-input"
+            placeholder="What needs to be done?"
+            autocomplete="off"
+          />
+          <button type="submit">Add Task</button>
+          <span id="task-input-error" role="alert" hidden></span>
+        </form>
+
+        <!-- Task container (populated by JS) -->
+        <ul id="task-container" aria-label="Task items" aria-live="polite"></ul>
+      </section>
+
+      <!-- Widget 4: Quick Links -->
+      <section id="quick-links" aria-label="Quick Links">
+        <div class="quick-links-header">
+          <h2>Quick Links</h2>
+          <div class="task-sort-controls">
+            <span class="sort-label">Sort:</span>
+            <button type="button" class="sort-btn link-sort-btn sort-btn--active" data-sort="none">Default</button>
+            <button type="button" class="sort-btn link-sort-btn" data-sort="alpha">A–Z</button>
+          </div>
+        </div>
+
+        <!-- Add-link form -->
+        <form id="link-form" novalidate>
+          <div class="form-field">
+            <label for="link-label-input">Label</label>
+            <input
+              type="text"
+              id="link-label-input"
+              name="link-label"
+              placeholder="Link label"
+              autocomplete="off"
+            />
+            <span id="link-label-error" role="alert" hidden></span>
+          </div>
+          <div class="form-field">
+            <label for="link-url-input">URL</label>
+            <input
+              type="url"
+              id="link-url-input"
+              name="link-url"
+              placeholder="https://example.com"
+              autocomplete="off"
+            />
+            <span id="link-url-error" role="alert" hidden></span>
+          </div>
+          <button type="submit">Add Link</button>
+        </form>
+
+        <!-- Links container (populated by JS) -->
+        <div id="links-container" aria-label="Quick link items" aria-live="polite"></div>
+      </section>
+
+    </div><!-- /.dashboard -->
+
+    <script src="js/app.js" defer></script>
+  </body>
+</html>
